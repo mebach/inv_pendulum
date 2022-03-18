@@ -1,9 +1,9 @@
 # Inverted Pendulum Parameter File
 import numpy as np
-import control as cnt
+import control
 
 # Desired state, of the form (z, zdot, theta, thetadot)
-des_state = np.array([[5.0],
+des_state = np.array([[0.0],
                       [0.0],
                       [np.pi],
                       [0.0]])
@@ -36,7 +36,7 @@ ki = 1.0
 
 # Simulation Parameters
 t_start = 0  # Start time of simulation
-t_end = 50.0  # End time of simulation
+t_end = 100.0  # End time of simulation
 Ts = 0.01  # sample time for simulation
 t_plot = 0.1  # the plotting and animation is updated at this rate
 
@@ -45,7 +45,7 @@ sigma = 0.05 # cutoff freq for dirty derivative
 beta = 0.05  # dirty derivative gain
 
 # saturation limits
-F_max = 20.0  # Max force, N
+F_max = 1000.0  # Max force, N
 
 ####################################################
 #                 State Space
@@ -76,8 +76,8 @@ w, v = np.linalg.eig(A)
 # by choosing an appropriate K matrix. This is done by using the pole function in the control library
 
 # Mostly arbitrary eigenvalues, but they are all negative to make the system "stable". Remember that from pole graphs, poles on the left side are stable and positive ones are unstable.
-des_eigs = [-1.3, -1.4, -1.5, -1.6]
-K = cnt.place(A, B, des_eigs)
+des_eigs = [-32.42, -0.75 + 0.79j, -0.75-0.79j, -.82]
+K = control.place(A, B, des_eigs)
 
 # print(K)
 # print(np.linalg.eig(A-B*K))  # note that the eigenvalues returned by this are the same as des_eigs
@@ -86,14 +86,16 @@ K = cnt.place(A, B, des_eigs)
 #                   LQR                         #
 #################################################
 
-Q = np.array([[1, 0, 0, 0],
-     [0, 1, 0, 0],
-     [0, 0, 1, 0],
-     [0, 0, 0, 1]])
+# Q = np.array([[1, 0, 0, 0],
+#      [0, 1, 0, 0],
+#      [0, 0, 10, 0],
+#      [0, 0, 0, 100]])
+#
+# R = np.array([[0.001]])
+#
+# K, _, __ = control.lqr(A, B, Q, R)
 
-R = np.array([[0.001]])
 
-K, _, __ = cnt.lqr(A, B, Q, R)
 
 
 

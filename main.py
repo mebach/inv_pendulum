@@ -1,4 +1,4 @@
-# THINGS TO DO
+ # THINGS TO DO
 # Change data plotter to hold the the new state variables, not just z position but a z and theta
 # Have animation draw new box
 
@@ -14,7 +14,7 @@ from pendulumDynamics import pendulumDynamics
 from pendulumController import pendulumController
 
 # instantiate reference input classes
-reference = signalGenerator(amplitude=0, frequency=0.2, y_offset=0.01)
+reference = signalGenerator(amplitude=5.0, frequency=0.02, y_offset=0.0)
 force = signalGenerator(amplitude=0.0, frequency=0.001)
 pendulum = pendulumDynamics(alpha=0.0)
 controller = pendulumController()
@@ -30,6 +30,7 @@ while t < P.t_end:  # main simulation loop
     t_next_plot = t + P.t_plot
     while t < t_next_plot:
         r = P.des_state
+        r[0] = reference.square(t)
         n = 0.0  # noise.random(t)  # simulate sensor noise
         x = pendulum.state
         u = controller.update(r, x)
